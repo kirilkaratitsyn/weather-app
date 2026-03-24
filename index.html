@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/geist@5.2.5/500.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <form action="" class="weatherForm">
+      <input type="text" class="cityInput" placeholder="Enter your City" />
+      <button type="submit">Get Weather</button>
+    </form>
+    <div class="card" style="display: none"></div>
+
+    <section class="weatherHistory" aria-labelledby="weatherHistoryTitle">
+      <div class="weatherHistoryHeader">
+        <h2 id="weatherHistoryTitle" class="weatherHistoryTitle">
+          Recent results
+        </h2>
+        <p class="weatherHistoryHint">Successful lookups are kept below.</p>
+      </div>
+
+      <ul class="historyList" id="weatherHistoryList" aria-live="polite"></ul>
+
+      <p class="historyEmpty" id="weatherHistoryEmpty">
+        No history yet — search for a city.
+      </p>
+    </section>
+
+    <script src="index.js"></script>
+  </body>
+</html>
