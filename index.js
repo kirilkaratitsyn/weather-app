@@ -4,7 +4,8 @@ const WeatherForm = document.querySelector(".weatherForm");
 const cityInput = document.querySelector(".cityInput");
 const card = document.querySelector(".card");
 const APIkey = "1f74a7156d618a180490a4059b6092f0";
-const storageKey = "weatherHistory";
+const storageHistoryKey = "weatherHistory";
+const storageLocationKey = "weatherLastLocation";
 
 document.addEventListener("DOMContentLoaded", function () {
   loadHistory();
@@ -45,7 +46,7 @@ function displayWeatherInfo(data) {
     main: { temp, humidity },
     weather: [{ description, id }],
   } = data;
-  const tempC = (temp - 273.15).toFixed(1);
+  const tempC = (temp - 273.15).toFixed(0);
   const emoji = getWeatherEmoji(id);
   card.textContent = "";
   card.style.display = "flex";
@@ -90,7 +91,7 @@ function displayError(message) {
 }
 
 function getHistoryItems() {
-  const historyItems = localStorage.getItem(storageKey);
+  const historyItems = localStorage.getItem(storageHistoryKey);
 
   if (historyItems) {
     return JSON.parse(historyItems);
@@ -103,7 +104,7 @@ function saveToHistory(city) {
   const historyItems = getHistoryItems();
   if (!historyItems.includes(city)) {
     historyItems.push(city);
-    localStorage.setItem(storageKey, JSON.stringify(historyItems));
+    localStorage.setItem(storageHistoryKey, JSON.stringify(historyItems));
     loadHistory();
   }
 }
@@ -138,7 +139,10 @@ function deleteSearchItem(city) {
   const historyItems = getHistoryItems();
   if (historyItems.includes(city)) {
     const updatedHistoryItems = historyItems.filter((item) => item !== city);
-    localStorage.setItem(storageKey, JSON.stringify(updatedHistoryItems));
+    localStorage.setItem(
+      storageHistoryKey,
+      JSON.stringify(updatedHistoryItems),
+    );
     displayHistoryItems(updatedHistoryItems);
   }
 }
@@ -147,15 +151,37 @@ function loadHistory() {
 }
 
 async function getLocation() {
+  const lastLocation = getLastLocation();
+
+  if (lastLocation) {
+    setQuerrySearch(lastLocation);
+    return;
+  }
+
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
     const city = data.city;
 
     if (city) {
+      setLastLocation(city);
       setQuerrySearch(city);
     }
   } catch (error) {
     console.log("Location error:", error);
   }
+}
+
+function getLastLocation() {
+  const lastLocation = localStorage.getItem(storageLocationKey);
+
+  if (lastLocation) {
+    return lastLocation;
+  } else {
+    return "";
+  }
+}
+
+function setLastLocation(city) {
+  localStorage.setItem(storageLocationKey, city);
 }
