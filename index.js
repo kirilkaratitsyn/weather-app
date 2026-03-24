@@ -6,6 +6,7 @@ const card = document.querySelector(".card");
 const APIkey = "1f74a7156d618a180490a4059b6092f0";
 const storageHistoryKey = "weatherHistory";
 const storageLocationKey = "weatherLastLocation";
+let currentDisplayedCity = "";
 
 document.addEventListener("DOMContentLoaded", function () {
   loadHistory();
@@ -14,9 +15,13 @@ document.addEventListener("DOMContentLoaded", function () {
 WeatherForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const city = cityInput.value;
+  const city = cityInput.value.trim();
 
   if (city) {
+    if (normalizeCity(city) === normalizeCity(currentDisplayedCity)) {
+      return;
+    }
+
     try {
       const weatherData = await getWeatherData(city);
       displayWeatherInfo(weatherData);
@@ -48,10 +53,11 @@ function displayWeatherInfo(data) {
   } = data;
   const tempC = (temp - 273.15).toFixed(0);
   const emoji = getWeatherEmoji(id);
+  currentDisplayedCity = city;
   card.textContent = "";
   card.style.display = "flex";
   card.innerHTML = `
-    <h1 class="cityDisplay">${city}</h1>
+    <h1 class="cityDisplay">${currentDisplayedCity}</h1>
     <p class="tempDisplay">${tempC}°C</p>
     <p class="humidityDisplay">Humidity: ${humidity}%</p>
     <p class="descriptionDisplay">${description}</p>
@@ -149,7 +155,9 @@ function deleteSearchItem(city) {
 function loadHistory() {
   displayHistoryItems(getHistoryItems());
 }
-
+function normalizeCity(city) {
+  return city.trim().toLowerCase();
+}
 async function getLocation() {
   const lastLocation = getLastLocation();
 
