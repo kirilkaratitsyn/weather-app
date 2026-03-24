@@ -392,10 +392,6 @@ p {
   font-variant-numeric: tabular-nums;
 }
 
-.humidityDisplay::before {
-  content: "Humidity · ";
-  opacity: 0.9;
-}
 
 .weatherEmoji {
   font-size: 2.75rem;
