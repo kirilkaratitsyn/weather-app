@@ -9,8 +9,8 @@ const storageLocationKey = "weatherLastLocation";
 let currentDisplayedCity = "";
 
 document.addEventListener("DOMContentLoaded", function () {
-  loadHistory();
-  getLocation();
+  renderSearchHistory();
+  loadInitialLocationWeather();
 });
 WeatherForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -23,19 +23,19 @@ WeatherForm.addEventListener("submit", async (event) => {
     }
 
     try {
-      const weatherData = await getWeatherData(city);
-      displayWeatherInfo(weatherData);
-      saveToHistory(city);
+      const weatherData = await fetchWeatherData(city);
+      renderWeatherCard(weatherData);
+      saveCityToHistory(city);
     } catch (error) {
       console.log(error);
-      displayError(error);
+      renderErrorCard(error);
     }
   } else {
-    displayError("Please Enter a city");
+    renderErrorCard("Please Enter a city");
   }
 });
 
-async function getWeatherData(city) {
+async function fetchWeatherData(city) {
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIkey}`;
   const responce = await fetch(apiUrl);
   if (!responce.ok) {
@@ -45,7 +45,7 @@ async function getWeatherData(city) {
   return await responce.json();
 }
 
-function displayWeatherInfo(data) {
+function renderWeatherCard(data) {
   const {
     name: city,
     main: { temp, humidity },
@@ -86,7 +86,7 @@ function getWeatherEmoji(weatherId) {
   }
 }
 
-function displayError(message) {
+function renderErrorCard(message) {
   const errorDisplay = document.createElement("p");
   errorDisplay.textContent = message;
   errorDisplay.classList.add("errorDisplay");
@@ -96,7 +96,7 @@ function displayError(message) {
   card.appendChild(errorDisplay);
 }
 
-function getHistoryItems() {
+function getSavedHistoryCities() {
   const historyItems = localStorage.getItem(storageHistoryKey);
 
   if (historyItems) {
@@ -106,16 +106,16 @@ function getHistoryItems() {
   }
 }
 
-function saveToHistory(city) {
-  const historyItems = getHistoryItems();
+function saveCityToHistory(city) {
+  const historyItems = getSavedHistoryCities();
   if (!historyItems.includes(city)) {
     historyItems.push(city);
     localStorage.setItem(storageHistoryKey, JSON.stringify(historyItems));
-    loadHistory();
+    renderSearchHistory();
   }
 }
 
-function displayHistoryItems(historyItems) {
+function renderHistoryList(historyItems) {
   const historyList = document.querySelector(".historyList");
   const historyEmpty = document.querySelector(".historyEmpty");
   historyList.textContent = "";
@@ -127,8 +127,8 @@ function displayHistoryItems(historyItems) {
       <span class="historyEmoji" aria-hidden="true">🕘</span>
       <div class="historyMain">
         <span class="historyCity">${city}</span>
-        <button class="searchCity" onclick="setQuerrySearch('${city}')">Search</button>
-        <button class="deleteCity" onclick="deleteSearchItem('${city}')">Delete</button>
+        <button class="searchCity" onclick="submitCitySearch('${city}')">Search</button>
+        <button class="deleteCity" onclick="removeCityFromHistory('${city}')">Delete</button>
       </div>
     </li>
   `;
@@ -137,32 +137,32 @@ function displayHistoryItems(historyItems) {
     historyEmpty.style.display = "block";
   }
 }
-function setQuerrySearch(city) {
+function submitCitySearch(city) {
   cityInput.value = city;
   WeatherForm.requestSubmit();
 }
-function deleteSearchItem(city) {
-  const historyItems = getHistoryItems();
+function removeCityFromHistory(city) {
+  const historyItems = getSavedHistoryCities();
   if (historyItems.includes(city)) {
     const updatedHistoryItems = historyItems.filter((item) => item !== city);
     localStorage.setItem(
       storageHistoryKey,
       JSON.stringify(updatedHistoryItems),
     );
-    displayHistoryItems(updatedHistoryItems);
+    renderHistoryList(updatedHistoryItems);
   }
 }
-function loadHistory() {
-  displayHistoryItems(getHistoryItems());
+function renderSearchHistory() {
+  renderHistoryList(getSavedHistoryCities());
 }
 function normalizeCity(city) {
   return city.trim().toLowerCase();
 }
-async function getLocation() {
-  const lastLocation = getLastLocation();
+async function loadInitialLocationWeather() {
+  const lastLocation = getSavedLastLocation();
 
   if (lastLocation) {
-    setQuerrySearch(lastLocation);
+    submitCitySearch(lastLocation);
     return;
   }
 
@@ -172,15 +172,15 @@ async function getLocation() {
     const city = data.city;
 
     if (city) {
-      setLastLocation(city);
-      setQuerrySearch(city);
+      saveLastLocation(city);
+      submitCitySearch(city);
     }
   } catch (error) {
     console.log("Location error:", error);
   }
 }
 
-function getLastLocation() {
+function getSavedLastLocation() {
   const lastLocation = localStorage.getItem(storageLocationKey);
 
   if (lastLocation) {
@@ -190,6 +190,6 @@ function getLastLocation() {
   }
 }
 
-function setLastLocation(city) {
+function saveLastLocation(city) {
   localStorage.setItem(storageLocationKey, city);
 }
