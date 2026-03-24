@@ -8,7 +8,7 @@ const storageKey = "weatherHistory";
 
 document.addEventListener("DOMContentLoaded", function () {
   loadHistory();
-  getLocation()
+  getLocation();
 });
 WeatherForm.addEventListener("submit", async (event) => {
   event.preventDefault();
