@@ -12,10 +12,13 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <form action="" class="weatherForm">
-      <input type="text" class="cityInput" placeholder="Enter your City" />
-      <button type="submit">Get Weather</button>
-    </form>
+    <div class="weatherSearchPanel">
+      <form action="" class="weatherForm">
+        <input type="text" class="cityInput" placeholder="Enter your City" />
+        <button class="submitWeather" type="submit">Get Weather</button>
+      </form>
+      <button type="button" class="detectLocation" onclick="getLocation()">Get my location</button>
+    </div>
     <div class="card" style="display: none"></div>
 
     <section class="weatherHistory" aria-labelledby="weatherHistoryTitle">

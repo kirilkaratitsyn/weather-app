@@ -8,6 +8,7 @@ const storageKey = "weatherHistory";
 
 document.addEventListener("DOMContentLoaded", function () {
   loadHistory();
+  getLocation()
 });
 WeatherForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -31,7 +32,6 @@ WeatherForm.addEventListener("submit", async (event) => {
 async function getWeatherData(city) {
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIkey}`;
   const responce = await fetch(apiUrl);
-  console.log(responce);
   if (!responce.ok) {
     throw new Error("Could not feth weather data");
   }
@@ -93,7 +93,6 @@ function getHistoryItems() {
   const historyItems = localStorage.getItem(storageKey);
 
   if (historyItems) {
-    console.log("Current Items", historyItems);
     return JSON.parse(historyItems);
   } else {
     return [];
@@ -145,4 +144,18 @@ function deleteSearchItem(city) {
 }
 function loadHistory() {
   displayHistoryItems(getHistoryItems());
+}
+
+async function getLocation() {
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+    const city = data.city;
+
+    if (city) {
+      setQuerrySearch(city);
+    }
+  } catch (error) {
+    console.log("Location error:", error);
+  }
 }

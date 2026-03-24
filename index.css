@@ -18,6 +18,10 @@
   --destructive: #f87171;
   --destructive-border: rgba(248, 113, 113, 0.35);
   --destructive-bg: rgba(248, 113, 113, 0.08);
+  /* shadcn secondary (dark) */
+  --secondary: #27272a;
+  --secondary-hover: #3f3f46;
+  --secondary-foreground: #fafafa;
   --radius: 0.5rem;
   --radius-sm: calc(var(--radius) - 2px);
   --radius-lg: calc(var(--radius) + 4px);
@@ -53,19 +57,40 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.weatherSearchPanel {
+  width: 100%;
+  max-width: min(100%, 520px);
+  padding: 1rem 1.25rem;
+  display: flex;
+
+  align-items: stretch;
+  gap: 0.75rem;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition:
+    border-color var(--t-normal) var(--ease),
+    box-shadow var(--t-slow) var(--ease);
+}
+
+.weatherSearchPanel:hover {
+  border-color: #3f3f46;
+}
+
 .weatherForm {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-
   gap: 0.5rem;
-  max-width: min(100%, 520px);
+  width: 100%;
+  min-width: 0;
 }
 
 .cityInput {
-
+  flex: 1 1 200px;
   min-width: 0;
   height: 2.5rem;
   padding: 0 0.75rem;
@@ -99,8 +124,8 @@ body {
     0 0 0 4px rgba(228, 228, 231, 0.35);
 }
 
-/* primary button — matches Geist / shadcn computed style */
-button[type="submit"] {
+/* primary — default variant (shadcn) */
+.submitWeather {
   box-sizing: border-box;
   display: flex;
   flex-shrink: 0;
@@ -133,19 +158,68 @@ button[type="submit"] {
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-button[type="submit"]:hover {
+.submitWeather:hover {
   background-color: #e0e0e0;
   background-color: lab(86.5 0 0);
 }
 
-button[type="submit"]:focus-visible {
+.submitWeather:focus-visible {
   outline: 2px solid oklab(0.555999 -0.00000530481 0.000012964 / 0.5);
   outline-offset: 2px;
 }
 
-button[type="submit"]:active {
+.submitWeather:active {
   background-color: #d6d6d6;
   background-color: lab(82 0 0);
+}
+
+/* secondary — outside form (shadcn) */
+.detectLocation {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  max-width: 100%;
+  height: 31px;
+  margin: 0;
+  padding: 0 12px;
+  font-family: Geist, "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  font-synthesis: none;
+  text-align: center;
+  text-wrap: nowrap;
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--secondary-foreground);
+  background-color: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: none;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition:
+    color var(--t-fast) var(--ease),
+    background-color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    box-shadow var(--t-normal) var(--ease);
+}
+
+.detectLocation:hover {
+  background-color: var(--secondary-hover);
+  border-color: #52525b;
+}
+
+.detectLocation:focus-visible {
+  outline: 2px solid oklab(0.556 0 0 / 0.45);
+  outline-offset: 2px;
+}
+
+.detectLocation:active {
+  background-color: #52525b;
 }
 
 /* compact primary — same as Get Weather, scaled down */
