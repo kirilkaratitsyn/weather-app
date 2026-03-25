@@ -1,6 +1,6 @@
 // Weather App
 
-const WeatherForm = document.querySelector(".weatherForm");
+const weatherForm = document.querySelector(".weatherForm");
 const cityInput = document.querySelector(".cityInput");
 const card = document.querySelector(".card");
 const APIkey = "1f74a7156d618a180490a4059b6092f0";
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   renderSearchHistory();
   loadInitialLocationWeather();
 });
-WeatherForm.addEventListener("submit", async (event) => {
+weatherForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const city = cityInput.value.trim();
@@ -139,7 +139,7 @@ function renderHistoryList(historyItems) {
 }
 function submitCitySearch(city) {
   cityInput.value = city;
-  WeatherForm.requestSubmit();
+  weatherForm.requestSubmit();
 }
 function removeCityFromHistory(city) {
   const historyItems = getSavedHistoryCities();
