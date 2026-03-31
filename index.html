@@ -14,10 +14,29 @@
   <body>
     <div class="weatherSearchPanel">
       <form action="" class="weatherForm">
-        <input type="text" class="cityInput" placeholder="Enter your City" />
+        <div class="searchField">
+          <input type="text" class="cityInput" placeholder="Enter your City" />
+          <div
+            class="searchSuggestions"
+            id="searchSuggestions"
+            role="listbox"
+            aria-label="City suggestions"
+            hidden
+          >
+            <p class="suggestionsStatus">Suggested cities</p>
+            <p class="suggestionsStatus suggestionsStatusEmpty" hidden>
+              No matching cities
+            </p>
+            <div class="suggestionsList"></div>
+          </div>
+        </div>
         <button class="submitWeather" type="submit">Get Weather</button>
       </form>
-      <button type="button" class="detectLocation" onclick="getLocation()">
+      <button
+        type="button"
+        class="detectLocation"
+        onclick="loadInitialLocationWeather()"
+      >
         Get my location
       </button>
     </div>
